@@ -1,4 +1,5 @@
 import 'package:better_player/better_player.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 void main() => runApp(MyApp());
@@ -24,24 +25,24 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  BetterPlayerController _betterPlayerController;
-
-  @override
-  void initState() {
-    BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
+  final betterPlayerController = BetterPlayerController(
+    BetterPlayerConfiguration(
+      autoPlay: true,
+      looping: true,
+      aspectRatio: 9 / 16,
+      controlsConfiguration: const BetterPlayerControlsConfiguration(
+        showControlsOnInitialize: true,
+        showControls: false,
+      ),
+    ),
+    betterPlayerDataSource: BetterPlayerDataSource(
       BetterPlayerDataSourceType.network,
-      'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-    );
-    _betterPlayerController = BetterPlayerController(
-      BetterPlayerConfiguration(
-          autoPlay: true,
-          looping: true,
-          autoDetectFullscreenDeviceOrientation: true,
-          controlsConfiguration: BetterPlayerControlsConfiguration()),
-      betterPlayerDataSource: betterPlayerDataSource,
-    );
-    super.initState();
-  }
+      'https://staging.milov.id/videoProfile/628137654321/MjAyMTA1MTgwMjU1NThfNjI4MTM3NjU0MzIxX21pbG92X3RyaW1fOTQ5NC5tcDQ=',
+      cacheConfiguration: BetterPlayerCacheConfiguration(useCache: true),
+    ),
+  );
+
+  // final ValueNotifier<bool> _isPlayed = ValueNotifier<bool>(false);
 
   @override
   Widget build(BuildContext context) {
@@ -49,12 +50,16 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text('Video Application'),
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: AspectRatio(
-            aspectRatio: 16 / 9,
-            child: BetterPlayer(controller: _betterPlayerController),
-          ),
+      body: Center(
+        child: GestureDetector(
+          onTap: () async {
+            if (betterPlayerController.isPlaying()) {
+              await betterPlayerController.pause();
+            } else {
+              await betterPlayerController.play();
+            }
+          },
+          child: BetterPlayer(controller: betterPlayerController),
         ),
       ),
     );
