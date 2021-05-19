@@ -13,8 +13,8 @@ dependencies:
     sdk: flutter
 
 
-  cupertino_icons: ^1.0.2
-  better_player: ^0.0.66
+  cupertino_icons: ^1.0.0
+  better_player: ^0.0.42
 
 dev_dependencies:
   flutter_test:
